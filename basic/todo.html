@@ -155,33 +155,44 @@
       <button class="btn btn-primary" type="button" @click="addTask">新增</button>
     </div>
   </div>
+  <!-- 頁籤: class決定外觀(active=>顯示)，點擊後切換active中的字串 -->
   <div class="card text-center">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs">
         <li class="nav-item">
-          <a class="nav-link active" href="#">全部</a>
+          <a class="nav-link" href="#" :class="{'active': visibility == 'all'}" @click="visibility = 'all'">全部</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="#">進行中</a>
+          <a class="nav-link " href="#" :class="{'active': visibility == 'active'}" @click="visibility = 'active'">進行中</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">已完成</a>
+          <a class="nav-link" href="#" :class="{'active': visibility == 'completed'}" @click="visibility = 'completed'">已完成</a>
         </li>
       </ul>
     </div>
     <ul class="list-group list-group-flush text-left">
-      <li class="list-group-item" v-for="item in todoList">
-        <div class="d-flex">
+      <!-- 一項todo task -->
+      <li class="list-group-item" v-for="(item, key) in filterTodoList" @dblclick="editTask(item)"> <!-- filterTodoList, not whole todoList -->
+        <!-- 列表，和編輯框互斥，雙擊時消失 -->
+        <div class="d-flex" v-if="item.id !== cacheTask.id">
+          <!-- 左邊打勾+標題 -->
           <div class="form-check">
             <input type="checkbox" class="form-check-input" :id="item.id" v-model="item.completed">
-            <label class="form-check-label" :for="item.id">
+            <label class="form-check-label" :class="{'completed': item.completed}" :for="item.id">
               {{ item.title }}
             </label>
           </div>
-          <button type="button" class="close ml-auto" aria-label="Close">
+          <!-- 刪除鍵 -->
+          <button type="button" class="close ml-auto" aria-label="Close" @click="removeTask(item)">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+        <!-- 編輯框，只有在雙擊時會出現 -->
+        <input type="text" class="form-control"
+          v-model="cacheTitle"
+          @keyup.esc="cancelEdit()"
+          @keyup.enter="doneEdit(item)"
+          v-if="item.id === cacheTask.id">
       </li>
       <!-- <li class="list-group-item">
         <div class="d-flex">
@@ -196,9 +207,9 @@
           </button>
         </div>
       </li> -->
-      <li class="list-group-item">
+      <!-- <li class="list-group-item">
         <input type="text" class="form-control">
-      </li>
+      </li> -->
     </ul>
     <div class="card-footer d-flex justify-content-between">
       <span>還有 3 筆任務未完成</span>
@@ -211,19 +222,22 @@
 var app = new Vue({
   el: '#app',
   data: {
-    newTask: '',
+    visibility: 'all', // 顯示中的頁籤
+    newTask: '', // input 代辦事項
     todoList: [
       {
-        id: '1',
+        id: '111',
         title: 'Decision tree',
         completed: false
       },
       {
-        id: '2',
+        id: '222',
         title: 'Random forest',
         completed: true
       }
-    ]
+    ],
+    cacheTitle: '', // 編輯標題時，暫存先前的標題
+    cacheTask: {} // 編輯標題時，暫存先前的todo task物件
   },
   methods: {
     addTask: function() {
@@ -235,6 +249,44 @@ var app = new Vue({
         title: newTitle,
         completed: false
       });
+      this.newTask = '';
+    },
+    removeTask: function(item) {
+      console.log("delete: ", item);
+      // find index of task and delete it
+      // const index = this.todoList.indexOf(item.id); // it's obj not primitive type
+      // console.log(index);
+      // if (index > -1) {
+      //   this.todoList.splice(index, 1);
+      // }
+      // https://stackoverflow.com/questions/3954438/how-to-remove-item-from-array-by-value
+      this.todoList = this.todoList.filter(function( obj ) {
+        return obj.id !== item.id;
+      });
+    },
+    editTask: function(task) {
+      console.log(task);
+      this.cacheTask = task;
+      this.cacheTitle = task.title;
+    },
+    cancelEdit: function() {
+      this.cacheTask = {};
+    },
+    doneEdit: function(task) {
+      task.title = this.cacheTitle;
+      this.cacheTitle = '';
+      this.cancelEdit();
+    }
+  },
+  // 被動 triggered
+  computed: {
+    filterTodoList: function(){
+      if (this.visibility == 'all')
+        return this.todoList;   
+      else if (this.visibility == 'active')
+        return this.todoList.filter(task => !task.completed);
+      else if (this.visibility == 'completed')
+        return this.todoList.filter(task => task.completed);
     }
   }
 });
