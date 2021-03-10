@@ -150,6 +150,7 @@
   <div class="mt-3">
     {{ text.split('').reverse().join('') }}
   </div>
+  {{ reverseText }}
 </div>
 
 <script>
@@ -160,6 +161,12 @@ var app = new Vue({
     newText: ''
   },
   // 請在此撰寫 JavaScript
+  // computed 只會在 data 裡的物件改變時被觸發
+  computed: {
+    reverseText: function() {
+      return this.text.split('').reverse().join('');
+    }
+  }
 });
 </script>
 

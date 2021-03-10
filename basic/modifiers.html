@@ -140,27 +140,30 @@
           
 <div class="alert alert-secondary">
   <ol class="mb-0">
-    <li>請將 button 改成 a 標籤，並加上 preventDefault()</li>
+    <li>請將 button 改成 a 標籤，並加上 preventDefault()，這樣 a 不會開啟連結了</li>
     <li>使用修飾符取代</li>
-    <li>將 input 加上 Enter 事件</li>
+    <li>將 input 加上 Enter 事件，按 Enter 可以觸發 reverseText</li>
     <li>將範例改成使用縮寫表示</li>
   </ol>
 </div>
 
 <div id="app">
-  <input type="text" class="form-control" v-model="text">
-  <button class="btn btn-primary mt-1">反轉字串</button>
+  <input type="text" class="form-control" @keyup.enter="reverseText" v-model="text"> 
+  <a :href="link" @click.prevent="reverseText" class="btn btn-primary mt-1">反轉字串</a>
   <div class="mt-3">
     {{ newText }}
   </div>
 </div>
+v-on: == @ <br>
+v-bind: == :
 
 <script>
 var app = new Vue({
   el: '#app',
   data: {
     text: '',
-    newText: ''
+    newText: '',
+    link: 'https://tw.stock.yahoo.com/'
   },
   // 請在此撰寫 JavaScript
   methods: {
@@ -170,6 +173,13 @@ var app = new Vue({
   }
 });
 </script>
+
+
+</br>
+</br>
+</br>
+</br>
+</br>
 
 <!-- 解答：
 reverseText(event) {

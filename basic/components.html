@@ -141,18 +141,37 @@
 <div class="alert alert-secondary">
   <ol class="mb-0">
     <li>將以下元素轉為元件</li>
+    <li>可以發現前兩個 counter 數值是共用 root elem 的 data</li>
+    <li>若是自己宣告的 component 則 data 是獨立的</li>
+    <li>記得打開 chrome vue plugin 喔!!</li>
   </ol>
 </div>
 
 <div id="app">
   <div>
     你已經點擊 <button class="btn btn-outline-secondary btn-sm" @click="counter += 1">{{ counter }}</button> 下。
+    你已經點擊 <button class="btn btn-outline-secondary btn-sm" @click="counter += 1">{{ counter }}</button> 下。  
   </div>
+  <counter-component></counter-component>
+  <counter-component></counter-component>
+  <counter-component></counter-component>
 </div>
 
 <script>
 // 請在此撰寫 JavaScript
-
+// Globally registered component
+Vue.component('counter-component', {
+  data: function() {
+    return {
+      counter: 0
+    }
+  },
+  template: `
+  <div>
+    <button class="btn btn-outline-secondary btn-sm" @click="counter += 1">{{ counter }}</button>
+  </div>
+  `
+});
 
 var app = new Vue({
   el: '#app',

@@ -141,54 +141,58 @@
 <div class="alert alert-secondary">
   <ol class="mb-0">
     <li>請跟隨課程完成此章節。</li>
+    <li>在各個元件上加上 v-model</li>
+    <li>The storage of v-model has added in 'data' object</li>
   </ol>
 </div>
 
 <div id="app">
   <h4>字串</h4>
   {{ text }}
-  <input type="text" class="form-control">
+  <input v-model="text" type="text" class="form-control">
   <hr>
   <pre>{{ textarea }}</pre>
-  <textarea cols="30" rows="3" class="form-control"></textarea>
+  <textarea v-model="textarea" cols="30" rows="3" class="form-control"></textarea>
   <hr>
   <h4>Checkbox 與 Radio</h4>
   <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="check1">
-    <label class="form-check-label" for="check1"> ... </label>
+    <input v-model="checkbox1" type="checkbox" class="form-check-input" id="check1">
+    <label class="form-check-label" for="check1"> 今晚我想來點 Foodpanda </label>
   </div>
   <hr>
   <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="check2" value="雞">
+    <input type="checkbox" class="form-check-input" id="check2" value="雞" v-model="checkboxArray">
     <label class="form-check-label" for="check2">雞</label>
   </div>
   <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="check3" value="豬">
+    <input type="checkbox" class="form-check-input" id="check3" value="豬" v-model="checkboxArray">
     <label class="form-check-label" for="check3">豬</label>
   </div>
   <div class="form-check">
-    <input type="checkbox" class="form-check-input" id="check4" value="牛">
+    <input type="checkbox" class="form-check-input" id="check4" value="牛" v-model="checkboxArray">
     <label class="form-check-label" for="check4">牛</label>
   </div>
-  <p>晚餐火鍋裡有 ...。</p>
+  <p>晚餐火鍋裡有 <span v-for="item in checkboxArray">{{ item }}</span>。</p>
   <hr>
   <div class="form-check">
-    <input type="radio" class="form-check-input" id="radio2" value="雞">
+    <input type="radio" class="form-check-input" id="radio2" value="雞" v-model="singleRadio">
     <label class="form-check-label" for="radio2">雞</label>
   </div>
   <div class="form-check">
-    <input type="radio" class="form-check-input" id="radio3" value="豬">
+    <input type="radio" class="form-check-input" id="radio3" value="豬" v-model="singleRadio">
     <label class="form-check-label" for="radio3">豬</label>
   </div>
   <div class="form-check">
-    <input type="radio" class="form-check-input" id="radio4" value="牛">
+    <input type="radio" class="form-check-input" id="radio4" value="牛" v-model="singleRadio">
     <label class="form-check-label" for="radio4">牛</label>
   </div>
-  <p>晚餐火鍋裡有 ...。</p>
+  <p>晚餐火鍋裡有 {{ singleRadio }}。</p>
   <hr>
   <h4>Select</h4>
   <select name="" id="" class="form-control" v-model="selected">
-    
+    <option value="" disabled>-- 請選擇 --</option>
+    <option value="小名">小名</option>
+    <option value="小美">小美RRRR</option>
   </select>
 </div>
 
