@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vue 的開發環境</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  </head>
+  
+  <body>
+    <div id="app">
+      {{ text }}
+      </br>
+      <button @click="addTableData(0)">新增資料1</button>
+      <button @click="addTableData(1)">新增資料2</button>
+
+      <!-- Dynamic Table -->
+      <table id="table">
+        <thead>
+          <!-- template for table header -->
+          <tr>
+            <th v-for="(header, index) in tableColumns" :id="header">{{ header }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- template for table row -->
+          <tr v-for="(item, index) in tableData" :key="index">
+            <!-- inject data into table column -->
+            <td v-for="(column, indexColumn) in tableColumns" :key="indexColumn">{{ item[column] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+    text: 'Hello Dynamic Table',
+    tableData: {}, // v-bind 表格的資料
+    tableColumns: [], // v-bind 表頭
+    dataset: [
+      // no.1 test data
+      [
+        {
+            'id':'1',
+            'title': 'hello',
+            'description': 'ok ok',
+            'created_date': '2018-09-09'
+        },
+        {
+            'id':'2',
+            'title': 'hello 2',
+            'description': 'ok ok 2',
+            'created_date': '2018-10-09'
+        }
+      ],
+      // no.2 test data
+      [
+        {
+          'xxx':'Tenserflow',
+          'yyy':'Pytorch',
+        },
+        {
+          'xxx':'Decision tree',
+          'yyy':'Random forest',
+        },
+        {
+          'xxx':'SVM',
+          'yyy':'Logistic regression',
+        }
+      ]
+    ]
+  },
+  methods: {
+    addTableData: function(datasetNumber) {
+      this.tableData = this.dataset[datasetNumber]; // set which dataset to display
+      this.tableColumns = Object.keys(this.tableData[0]); // set column name
+      // console.log(this.tableData[0]);
+    }
+  }
+});
+</script>
+
+  <style>
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  </style>
+</html>
