@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vue 的開發環境</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+  </head>
+  
+  <body>
+    <div id="app">
+      <v-app>
+        <v-main>
+          <v-container>{{ text }}</v-container>
+          </br>
+          <v-btn @click="addTableData(0)" color="accent" elevation="2">新增資料1</v-btn>
+          <v-btn @click="addTableData(1)" color="accent" elevation="2">新增資料2</v-btn>
+    
+          <!-- Dynamic Table -->
+          <template>
+            <v-simple-table>
+              <template v-slot:default>
+                <thead>
+                  <!-- template for table header -->
+                  <tr>
+                    <th v-for="(header, index) in tableColumns" :id="header" class="text-left">{{ header }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- template for table row -->
+                  <tr v-for="(item, index) in tableData" :key="index">
+                    <!-- inject data into table column -->
+                    <td v-for="(column, indexColumn) in tableColumns" :key="indexColumn">{{ item[column] }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </template>
+          
+          <v-container> 下面的v-data-table無法動態顯示資料，需要用到props TAT </v-container>
+          <br>
+
+          <!-- Data tables -->
+          <template>
+            <v-data-table
+              :headers="tableColumns"
+              :items="tableData"
+              :items-per-page="5"
+              class="elevation-1"
+            ></v-data-table>
+          </template>
+        </v-main>
+      </v-app>
+      
+      
+    </div>
+  </body>
+
+<!-- CDN, not recommand -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+<script>
+var app = new Vue({
+  el: '#app',
+  vuetify: new Vuetify(),
+  data: {
+    text: 'Hello Dynamic Table',
+    tableData: [], // v-bind 表格的資料
+    tableColumns: [], // v-bind 表頭
+    dataset: [
+      // no.1 test data
+      [
+        {
+            '帳號':'sherrychen',
+            '中文姓名': '陳X虹',
+            '公司': '經貿聯網',
+            'EMail': 'venuschen@cybersoft4u.com',
+            '主管EMail': ''
+        },
+        {
+            '帳號':'vendor_en',
+            '中文姓名': '廠商部門工程師',
+            '公司': '普林達',
+            'EMail': 'howardhsu@cybersoft4u.com',
+            '主管EMail': '	aho0120@gmail.com'
+        }
+      ],
+      // no.2 test data
+      [
+        {
+          'xxx':'Tenserflow',
+          'yyy':'Pytorch',
+        },
+        {
+          'xxx':'Decision tree',
+          'yyy':'Random forest',
+        },
+        {
+          'xxx':'SVM',
+          'yyy':'Logistic regression',
+        }
+      ]
+    ]
+  },
+  methods: {
+    addTableData: function(datasetNumber) {
+      this.tableData = this.dataset[datasetNumber]; // set which dataset to display
+      this.tableColumns = Object.keys(this.tableData[0]); // set column name
+      // console.log(this.tableData[0]);
+    }
+  }
+});
+</script>
+
+  <style>
+  /* table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+  } */
+  </style>
+</html>

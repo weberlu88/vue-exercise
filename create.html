@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vue 的開發環境</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <!-- Vue2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- Vue-multiselect v2 CDN -->
+    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+  </head>
+  
+  <body>
+    <div id="app">
+        <p> 使用者帳號管理 </p>
+     
+        <!-- Form as Table -->
+        <table id="table">
+        <thead>
+        </thead>
+        <tbody>
+            <!-- bind input data via view-model -->
+            <tr>
+            <td>
+                <label for="companyName">公司:<span style="color:red">*</span></label>
+            </td>
+            <td>
+                <select v-model="form.companyName">
+                    <option disabled value="">請選擇公司</option>
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                </select>
+            </td>
+            <td>
+                <label for="departmentName">部門:</label>
+            </td>
+            <td>
+                <select v-model="form.departmentName">
+                    <option disabled value="">請選擇部門</option>
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                </select>
+            </td>
+            </tr>
+
+            <tr>
+            <td><label for="account">帳號:<span style="color:red">*</span></label></td>
+            <td><input id="account" v-model.trim="form.account"></td>
+            
+            <td><label for="chName">中文姓名:<span style="color:red">*</span></label></td>
+            <td><input id="chName" v-model.trim="form.chName"></td>
+            </tr>
+
+            <tr>
+            <td><label for="engName">英文姓名:</label></td>
+            <td><input id="engName" v-model="form.engName"></td>
+            
+            <td><label for="telephone">電話:</label></td>
+            <td><input id="telephone" v-model.number="form.telephone"></td>
+            </tr>
+
+            <tr>
+            <td><label for="cellphone">行動電話:</label></td>
+            <td><input id="cellphone" v-model.number="form.cellphone"></td>
+
+            <td><label for="email">EMail:</label></td>
+            <td><input id="email" v-model.trim="form.email"></td>
+            </tr>
+
+            <tr>
+            <td>
+                <label for="emailSupervisor">主管EMail:</label>
+            </td>
+            <td>
+                <input id="emailSupervisor" v-model.trim="form.emailSupervisor">
+            </td>
+            <td>
+                <label for="notes">備註:</label>
+            </td>
+            <td>
+                <input id="notes" v-model="form.notes">
+            </td>
+            </tr>
+
+            <tr>
+            <td><label for="loginErrorCount">登入錯誤次數:</label></td>
+            <td><input id="loginErrorCount" v-model="form.loginErrorCount" disabled></td>
+            
+            <td><label for="status">狀態:</label></td>
+            <td>
+                <select id="status" v-model="form.status">
+                    <option disabled value="新帳號">新帳號</option>
+                </select>
+            </td>
+            </tr>
+
+            <tr>
+            <td><label for="password">密碼:</label></td>
+            <td><input id="password" v-model.trim="form.password"></td>
+
+            <td><label for="passwordConfirm">確認密碼:</label></td>
+            <td><input id="passwordConfirm" v-model.trim="form.passwordConfirm"></td>
+            </tr>
+
+            <tr>
+            <td colspan="2">
+                <!-- empty td -->
+            </td>
+
+            <td colspan="2">
+                <input type="checkbox" id="rootAuthority" v-model="form.rootAuthority">
+                <label for="rootAuthority">控管資料權限 (勾選-控管;未勾選-可見所有倉庫)</label>
+            </td>
+            </tr>
+        </tbody>
+        </table>
+
+        <br>
+
+        <!-- 角色權限 -->
+        <div id="authority" class="select">
+          <a href="#" id="roleSelectAll" @click.prevent="selectAll">全選</a>
+          <a href="#" id="roleDeselectAll" @click.prevent="deselectAll">取消全選</a>
+          <!-- https://vue-multiselect.js.org/#sub-multiple-select -->
+          <div>
+            <label class="typo__label">角色權限:</label>
+            <vue-multiselect v-model="select.value" :options="select.options" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="name" :preselect-first="false">
+              <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
+            </vue-multiselect>
+          </div>
+        </div>
+
+        <br>
+        
+
+        <button @click="save">儲存</button>
+        <button @click="cancel">取消</button>
+        <!-- test -->
+        <p> 以下是model裡的資料 </p>
+        <p>{{ form }}</p>
+        <p>select: <pre class="language-json"><code>{{ select.value }}</code></pre></p>
+    </div>
+  </body>
+
+<script>
+// vue-multiselect via CDN
+// register globally
+Vue.component('vue-multiselect', window.VueMultiselect.default);
+
+var app = new Vue({
+    
+  el: '#app',
+  components: {
+    Multiselect: 'vue-multiselect'
+  },
+  data: {
+    // 表格資料
+    form: {
+        companyName: '',
+        departmentName: '',
+        account: '',
+        chName: '',
+        engName: '',
+        telephone: '',
+        cellphone:'',
+        email: '',
+        emailSupervisor: '',
+        notes: '',
+        loginErrorCount: 0,
+        status: '新帳號',
+        password: '',
+        passwordConfirm: '',
+        rootAuthority: true
+    },
+    select: {
+      value: [],
+      options: [
+        { name: 'Vue.js', language: 'JavaScript' },
+        { name: 'Adonis', language: 'JavaScript' },
+        { name: 'Rails', language: 'Ruby' },
+        { name: 'Sinatra', language: 'Ruby' },
+        { name: 'Laravel', language: 'PHP' },
+        { name: 'Phoenix', language: 'Elixir' }
+      ]
+    }
+    
+  },
+  methods: {
+    save: function(event) {
+
+    },
+    cancel: function(event) {
+
+    },
+    selectAll (event) {
+      this.select.value = this.select.options.slice();
+    },
+    deselectAll (event) {
+      this.select.value = [];
+    }
+  }
+});
+</script>
+
+  <style>
+  table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px
+  }
+  div.select {
+    width: 500px;
+    border: 3px solid #73AD21;
+  }
+  </style>
+</html>
