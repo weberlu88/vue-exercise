@@ -121,10 +121,12 @@
 </div>
 
 <div id="app">
-  <h2>靜態傳遞</h2>
-  <photo></photo>
+  <!-- 寫死的url -->
+  <h2>靜態傳遞</h2> 
+  <photo img-url="https://images.unsplash.com/photo-1522204538344-922f76ecc041?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=50e38600a12d623a878983fc5524423f&auto=format&fit=crop&w=1351&q=80"></photo>
+  <!-- 由data傳入url (v-bind) -->
   <h2>動態傳遞</h2>
-  <photo></photo>
+  <photo :img-url="url"></photo>
 </div>
 
 <script type="text/x-template" id="photo">
@@ -137,8 +139,10 @@
 <script>
 Vue.component('photo', {
   // 同學請依據課程內容，自行填寫 Props 的寫法
+  // 建立<photo>元件時，傳入的參數
+  props: ['imgUrl'],
   template: '#photo'
-})
+});
 
 var app = new Vue({
   el: '#app',
