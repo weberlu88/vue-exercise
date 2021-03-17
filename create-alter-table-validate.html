@@ -11,13 +11,18 @@
     <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
     <!-- Vuelidate local js -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/vuelidate@0.7.6/lib/index.min.js"></script> -->
-    <script src="validators.min.js"></script>
-    <script src="vuelidate.min.js"></script>
+    <script type="module" src="validators.min.js"></script>
+    <script type="module" src="vuelidate.min.js"></script>
   </head>
   
   <body>
     <div id="app">
         <p> 使用者帳號管理 </p>
+
+        <div>
+          <div class="error" v-if="!$v.employeeNumber.required">Field is required</div>
+          <div class="error" v-if="!$v.employeeNumber.minLength">EmployeeNumber must have at least {{$v.employeeNumber.$params.minLength.min}} letters.</div>
+        </div>
      
         <!-- Table as Form -->
         <table id="table">
@@ -38,7 +43,8 @@
                 </select>
             </td>
             <td><label for="employeeNumber">公司員編:</label></td>
-            <td><input id="employeeNumber" v-model="form.employeeNumber"></td>
+            <td><input id="employeeNumber" v-model="form.employeeNumber" @input="setEmployeeNumber($event.target.value)"></td>
+            
             </tr>
 
             <tr>
@@ -114,6 +120,8 @@
 Vue.component('vue-multiselect', window.VueMultiselect.default);
 
 // global
+require('__path_to_vue.js__')
+import { required, minLength, between } from "validators.min.js";
 Vue.use(vuelidate.default);
 </script>
 
@@ -129,8 +137,8 @@ var app = new Vue({
     // 表格資料
     form: {
         companyName: '',
-        account: '',
         employeeNumber: '',
+        account: '',
         chName: '',
         notes: '',
         loginErrorCount: 0,
@@ -172,6 +180,25 @@ var app = new Vue({
     },
     deselectAll (event) {
       this.select.value = [];
+    },
+    // 驗證方法
+    setEmployeeNumber(value) {
+      this.employeeNumber = value
+      this.$v.employeeNumber.$touch()
+    }
+  },
+  // vuelidate 驗證
+  // https://vuelidate.js.org/#sub-without-v-model
+  // 利用cdn比較麻煩，參照 https://vueschool.io/lessons/vuejs-form-validation-with-vuelidate
+  validations: {
+    employeeNumber: {
+      required: validators.required,
+      maxLenght: validators.maxLenght(10000000000)
+    },
+    account: {
+      required: validators.required,
+      maxLenght: validators.minLength(4),
+      maxLenght: validators.maxLenght(20)
     }
   }
 });

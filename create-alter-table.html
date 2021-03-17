@@ -139,7 +139,9 @@ var app = new Vue({
         { name: 'Rails', language: 'Ruby' },
         { name: 'Sinatra', language: 'Ruby' },
         { name: 'Laravel', language: 'PHP' },
-        { name: 'Phoenix', language: 'Elixir' }
+        { name: 'Phoenix', language: 'Elixir' },
+        { name: '可以打中文', language: 'Chinese' },
+        { name: '不知道選項多了 版面會不會很難看', language: '12111' }
       ]
     }
     
@@ -154,6 +156,7 @@ var app = new Vue({
       delete newEmployeeData.passwordConfirm;
       console.log(newEmployeeData);
       // send request
+      alert('請接上API');
     },
     cancel: function(event) {
       // close the window
